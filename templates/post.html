@@ -1,0 +1,34 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+<!-- Название у нас будет products -->
+{% block title %}
+Одна новость
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все товары -->
+{% block content %}
+<h1>Новость</h1>
+<table>
+    <tr>
+
+        <td>Заголовок</td>
+        <td>Дата публикации</td>
+        <td>Текст</td>
+        <td>Автор</td>
+        <td>Категория</td>
+    </tr>
+
+    <tr>
+
+        <td>{{ post.title }}</td>
+        <td>{{ post.post_time |date:'d M Y' }}</td>
+        <td>{{ post.text|truncatechars:20  }}</td>
+        <td>{{ post.author}}</td>
+        <td> {% for category in post.category.all %}
+                {{ category.name }}{% if not forloop.last %}, {% endif %}  <!-- Добавляем запятую между категориями -->
+            {% endfor %}</td>
+    </tr>
+</table>
+
+{% endblock content %}

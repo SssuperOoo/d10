@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение регистрации</title>
+</head>
+<body>
+    <h1>Привет, {{ user.username }},</h1>
+    <p>Спасибо за регистрацию на нашем сайте!</p>
+    <p>Пожалуйста, перейдите по ссылке ниже для активации вашей учетной записи:</p>
+    <p><a href="{{ activate_url }}">Активировать аккаунт</a></p>
+    <p>Если вы не запрашивали эту регистрацию, пожалуйста, проигнорируйте это письмо.</p>
+</body>
+</html>

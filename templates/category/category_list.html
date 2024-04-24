@@ -1,0 +1,99 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+{% block title %}
+Posts
+{% endblock title %}
+
+{% block content %}
+<h3>Категория : {{ category.name }}</h3>
+<!-- Используем переданную из представления переменную time_now
+и применяем к ней фильтр date. По назначению этот фильтр очень похож
+на метод strftime у объекта datetime в Python — вывод времени
+в указанном формате. -->
+<h3>Текущая дата {% current_time '%b %d %Y время %H : %M' %}</h3>
+<h3>Всего новостей в этой категории: {{ page_obj.paginator.count }}</h3>
+{% if is_not_subscriber %}
+<p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn btn-secondary btn-sm">Подписаться</a></p>
+{% endif %}
+<hr>
+
+{% if category_list %}
+<table>
+    <tr>
+
+        <td>Заголовок</td>
+        <td>Дата публикации</td>
+        <td>Текст</td>
+        <td>Категория</td>
+
+    </tr>
+
+    {% for post in category_list %}
+    <tr>
+
+        <td>{{ post.title |truncatechars:20 | censor }}</td>
+        <td>{{ post.post_time |date:'d M Y' }}</td>
+        <td>{{ post.text|truncatechars:40 }}</td>
+        <td>
+            {% if category %}
+    <a href="{% url 'category_list' category.id %}">{{ category.name }}</a>
+{% endif %}
+<!--            <td> {%if is_not_subscriber %}-->
+<!--        <a href="{% url 'subscribe' pk=category.id %}">Подписька</a>-->
+<!--        {% endif %}</td>-->
+
+
+<!--            {% for category in post.category.all %}-->
+<!--            <a href ="{%url 'category_list' category.id %}">{{category}}</a>-->
+<!--            {% if not forloop.last %}<br>{% endif %}-->
+<!--            {% endfor %}-->
+<!--            Здесь мы сделали чтобы отображались все категории, но смысл отображать все категории если мы перешли конкретно по определенной категории??-->
+<!--            {% for category in post.category.all %}-->
+<!--            {{ category.name }}-->
+<!--            {% if not forloop.last %}<br>{% endif %}-->
+<!--            {% endfor %}-->
+            <!--           тоже самое но без кнопки-->
+        </td>
+        <td>
+            {% if user.is_authenticated and user|is_author %}
+            <!--Проверим через наш фильтер является ли человек автором-->
+            {% if post.post_type == 'AR' %}
+            <a href="{% url 'articles_update' pk=post.pk %}">Редактировать</a>
+            {% elif post.post_type == 'NEW' %}
+            <a href="{% url 'news_update' pk=post.pk %}">Редактировать</a>
+            {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+{% else %}
+<h2>Статей нет!</h2>
+{% endif %}
+{# Добавляем пагинацию на страницу #}
+
+{# Информация о предыдущих страницах #}
+{% if page_obj.has_previous %}
+<a href="?{% url_replace page=1 %}">1</a>
+{% if page_obj.previous_page_number != 1 %}
+...
+<a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+{% endif %}
+{% endif %}
+
+{# Информация о текущей странице #}
+Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+
+{# Информация о следующих страницах #}
+{% if page_obj.has_next %}
+<a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+{% if paginator.num_pages != page_obj.next_page_number %}
+...
+<a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+{% endif %}
+{% endif %}
+
+
+{% endblock content %}

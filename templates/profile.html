@@ -1,0 +1,26 @@
+
+
+{% block content %}
+<h2>Страница авторизованного пользователя {{request.user.username}}</h2>
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% if is_not_author %}
+<button> <a href="/upgrade/"> Хочу стать Автором!</a> </button>
+{% endif %}
+<div> Здесь может содержаться персональная информация для каждого пользователя</div>
+<hr>
+Ваш email   {{ request.user.email }}
+<!--{% if is_not_author %}-->
+<!--<button> <a href="/upgrade/"> Хочу стать Автором!</a> </button>-->
+<!--{% endif %}-->
+<hr>
+<button> <a href="accounts/logout"> Выйти</a> </button>
+<hr>
+<button> <a href="/posts/">Перейти к постам</a> </button>
+{% endblock %}
